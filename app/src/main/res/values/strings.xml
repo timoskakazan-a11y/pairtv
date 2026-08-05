@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PairTV</string>
+    <string name="title_searching">Поиск ПК в сети…</string>
+    <string name="title_found">Выберите ПК:</string>
+    <string name="title_none">Компьютер не найден. Убедитесь, что программа запущена на ПК и оба устройства в одной Wi-Fi сети.</string>
+    <string name="btn_rescan">Искать снова</string>
+    <string name="btn_disconnect">Отключиться</string>
+</resources>
