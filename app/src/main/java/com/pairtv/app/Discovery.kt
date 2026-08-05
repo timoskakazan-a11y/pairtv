@@ -15,8 +15,6 @@ data class DiscoveredPc(
     val videoCount: Int,
 )
 
-private const val DISCOVERY_PORT = 47123
-private const val DISCOVERY_MAGIC = "PAIRTV_DISCOVER"
 private const val SCAN_TIMEOUT_MS = 3000
 
 object Discovery {
@@ -32,10 +30,10 @@ object Discovery {
             socket.broadcast = true
             socket.soTimeout = SCAN_TIMEOUT_MS
 
-            val requestBytes = DISCOVERY_MAGIC.toByteArray()
+            val requestBytes = Net.DISCOVERY_MAGIC.toByteArray()
             for (broadcastAddr in broadcastAddresses()) {
                 try {
-                    val packet = DatagramPacket(requestBytes, requestBytes.size, broadcastAddr, DISCOVERY_PORT)
+                    val packet = DatagramPacket(requestBytes, requestBytes.size, broadcastAddr, Net.DISCOVERY_PORT)
                     socket.send(packet)
                 } catch (_ : Exception) {
                     // игнорируем недоступные интерфейсы

@@ -14,9 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,36 +69,19 @@ class MainActivity : AppCompatActivity() {
         statusText.text = "Подключение к ${pc.name}…"
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            val urls = withContext(Dispatchers.IO) { fetchPlaylist(pc) }
+            val playlist = withContext(Dispatchers.IO) { PlaylistClient.fetch(pc.ip, pc.httpPort) }
             progressBar.visibility = View.GONE
-            if (urls.isNullOrEmpty()) {
+            if (playlist == null || playlist.urls.isEmpty()) {
                 Toast.makeText(this@MainActivity, "На ПК нет добавленных видео", Toast.LENGTH_LONG).show()
                 return@launch
             }
             val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-            intent.putStringArrayListExtra(PlayerActivity.EXTRA_URLS, ArrayList(urls))
+            intent.putStringArrayListExtra(PlayerActivity.EXTRA_URLS, ArrayList(playlist.urls))
+            intent.putExtra(PlayerActivity.EXTRA_SCALE, playlist.scale)
+            intent.putExtra(PlayerActivity.EXTRA_PC_IP, pc.ip)
+            intent.putExtra(PlayerActivity.EXTRA_PC_PORT, pc.httpPort)
+            intent.putExtra(PlayerActivity.EXTRA_TV_NAME, android.os.Build.MODEL ?: "AndroidTV")
             startActivity(intent)
-        }
-    }
-
-    private fun fetchPlaylist(pc: DiscoveredPc): List<String>? {
-        return try {
-            val url = URL("http://${pc.ip}:${pc.httpPort}/playlist.json")
-            val conn = url.openConnection() as HttpURLConnection
-            conn.connectTimeout = 4000
-            conn.readTimeout = 4000
-            conn.requestMethod = "GET"
-            val text = conn.inputStream.bufferedReader().use { it.readText() }
-            conn.disconnect()
-            val json = JSONObject(text)
-            val items = json.getJSONArray("items")
-            val list = mutableListOf<String>()
-            for (i in 0 until items.length()) {
-                list.add(items.getJSONObject(i).getString("url"))
-            }
-            list
-        } catch (e: Exception) {
-            null
         }
     }
 }

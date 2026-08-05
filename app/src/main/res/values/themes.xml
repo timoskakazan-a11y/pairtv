@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.PairTV" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:colorBackground">#0D1117</item>
+        <item name="android:colorBackground">@color/brand_bg</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="colorAccent">@color/brand_primary</item>
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
     </style>
 
     <style name="Theme.PairTV.Player" parent="Theme.AppCompat.NoActionBar">
